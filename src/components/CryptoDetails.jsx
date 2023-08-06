@@ -15,6 +15,7 @@ import {
     MessageOutlined
 } from "@ant-design/icons";
 import {useEffect, useState} from "react";
+import {LineChart} from "./index.jsx";
 import {useGetCryptoDetailsQuery, useGetCryptoHistoryQuery} from "../services/cryptoApi";
 
 const {Title, Text} = Typography;
@@ -27,11 +28,11 @@ export default function CryptoDetails() {
     console.log(coinId)
     const [timePeriod, setTimePeriod] = useState('7d');
     const {data, isFetching} = useGetCryptoDetailsQuery(coinId);
-    // const {data: coinHistory, isFetching: isFetchingHistory} = useGetCryptoHistoryQuery({coinId, timePeriod: '7d'});
+    const {data: coinHistory} = useGetCryptoHistoryQuery({coinId, timePeriod});
     const cryptoDetails = data?.data?.coin;
-    console.log(cryptoDetails);
     // const cryptoHistory = coinHistory?.data?.history;
 
+    if(isFetching) return 'Loading...';
 
     const time = ['3h', '24h', '7d', '30d', '1y', '5y'];
 
@@ -113,7 +114,7 @@ export default function CryptoDetails() {
             >
                 {time.map((date) => <Option key={date}>{date}</Option>)}
             </Select>
-            {/* Line Chart */}
+             <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name}/>
             <Col className={'stats-container'}>
                 <Col className={'coin-value-statistics'}>
                     <Col className={'coin-value-statistics-heading'}>
@@ -126,7 +127,7 @@ export default function CryptoDetails() {
                         </p>
                     </Col>
                     {stats.map(({icon, title, value}) => (
-                        <Col key={''} className={'coin-stats'}>
+                        <Col key={title} className={'coin-stats'}>
                             <Col className={'coin-stats-name'}>
                                 <Text>{icon}</Text>
                                 <Text>{title}</Text>
@@ -146,7 +147,7 @@ export default function CryptoDetails() {
                         </p>
                     </Col>
                     {genericStats.map(({icon, title, value}) => (
-                        <Col className={'coin-stats'}>
+                        <Col key={title} className={'coin-stats'}>
                             <Col className={'coin-stats-name'}>
                                 <Text>{icon}</Text>
                                 <Text>{title}</Text>
@@ -160,7 +161,7 @@ export default function CryptoDetails() {
                 <Row className={'coin-desc'}>
                     <Title level={3} className={'coin-details-heading'}>
                         What is {cryptoDetails?.name}
-                        {HTMLReactParser(cryptoDetails?.description)}
+                        <Title level={4}>{HTMLReactParser(cryptoDetails?.description)}</Title>
                     </Title>
                 </Row>
                 <Col className={'coin-links'}>
@@ -178,7 +179,6 @@ export default function CryptoDetails() {
                         </Row>
                     ))}
                 </Col>
-                );
             </Col>
         </Col>
     );
