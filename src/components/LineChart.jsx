@@ -34,26 +34,26 @@ export default function LineChart({coinHistory, currentPrice, coinName}) {
 
     if (loading) return 'Loading...';
 
-    const options = {
-        scales: {
-            y: {
-                beginAtZero: true
-            },
-            x: {
-                type: 'line',
-                adapters: {
-                    date: {
-                        parser: 'MM/DD/YYYY',
-                        tooltipFormat: 'll'
-                    }
-                },
-                ticks: {
-                    autoSkip: true,
-                    maxTicksLimit: 10
-                }
-            }
-        }
-    };
+    // const options = {
+    //     scales: {
+    //         y: {
+    //             beginAtZero: true
+    //         },
+    //         x: {
+    //             type: 'line',
+    //             adapters: {
+    //                 date: {
+    //                     parser: 'MM/DD/YYYY',
+    //                     tooltipFormat: 'll'
+    //                 }
+    //             },
+    //             ticks: {
+    //                 autoSkip: true,
+    //                 maxTicksLimit: 10
+    //             }
+    //         }
+    //     }
+    // };
 
 
 
@@ -66,7 +66,7 @@ export default function LineChart({coinHistory, currentPrice, coinName}) {
                     <Title level={5} className="current-price">Current {coinName} Price: $ {currentPrice}</Title>
                 </Col>
             </Row>
-            {chartData && <Line data={chartData} options={options}/>}
+            {/*{chartData && <Line data={chartData} options={options}/>}*/}
             {/*<Select*/}
             {/*    defaultValue="7d"*/}
             {/*    className="select-timeperiod"*/}
