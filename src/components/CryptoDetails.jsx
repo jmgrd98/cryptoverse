@@ -28,9 +28,13 @@ export default function CryptoDetails() {
 
     const [timePeriod, setTimePeriod] = useState('7d');
     const {data, isFetching} = useGetCryptoDetailsQuery(coinId);
-    const {data: coinHistory} = useGetCryptoHistoryQuery({coinId, timePeriod});
+    const  coinHistoryData = useGetCryptoHistoryQuery({coinId, timePeriod});
     const cryptoDetails = data?.data?.coin;
-    console.log(cryptoDetails);
+    const coinHistory = {
+        coinId: coinHistoryData?.originalArgs?.coinId,
+        timePeriod: coinHistoryData?.originalArgs?.timePeriod,
+    }
+    console.log(coinHistoryData);
 
     if(isFetching) return 'Loading...';
 
@@ -113,9 +117,9 @@ export default function CryptoDetails() {
                 placeholder={'Select Time Period'}
                 onChange={(value) => setTimePeriod(value)}
             >
-                {time.map((date) => <Option key={date}>{date}</Option>)}
+                {time.map((date) => <Option key={crypto.randomUUID()}>{date}</Option>)}
             </Select>
-             <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name}/>
+             <LineChart key={crypto.randomUUID()} coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name}/>
             <Col className={'stats-container'}>
                 <Col className={'coin-value-statistics'}>
                     <Col className={'coin-value-statistics-heading'}>
@@ -128,7 +132,7 @@ export default function CryptoDetails() {
                         </p>
                     </Col>
                     {stats.map(({icon, title, value}) => (
-                        <Col key={title} className={'coin-stats'}>
+                        <Col key={crypto.randomUUID()} className={'coin-stats'}>
                             <Col className={'coin-stats-name'}>
                                 <Text>{icon}</Text>
                                 <Text>{title}</Text>
@@ -148,7 +152,7 @@ export default function CryptoDetails() {
                         </p>
                     </Col>
                     {genericStats.map(({icon, title, value}) => (
-                        <Col key={title} className={'coin-stats'}>
+                        <Col key={crypto.randomUUID()} className={'coin-stats'}>
                             <Col className={'coin-stats-name'}>
                                 <Text>{icon}</Text>
                                 <Text>{title}</Text>
@@ -170,7 +174,7 @@ export default function CryptoDetails() {
                         {cryptoDetails?.name} Links
                     </Title>
                     {cryptoDetails?.links?.map((link) => (
-                        <Row className={'coin-link'} key={link.name}>
+                        <Row className={'coin-link'} key={crypto.randomUUID()}>
                             <Title level={5} className={'link-name'}>
                                 {link.type}
                             </Title>
