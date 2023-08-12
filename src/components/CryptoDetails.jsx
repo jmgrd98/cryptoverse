@@ -23,13 +23,14 @@ const {Option} = Select;
 
 export default function CryptoDetails() {
 
+
     const {coinId} = useParams();
 
-    console.log(coinId)
     const [timePeriod, setTimePeriod] = useState('7d');
     const {data, isFetching} = useGetCryptoDetailsQuery(coinId);
     const {data: coinHistory} = useGetCryptoHistoryQuery({coinId, timePeriod});
     const cryptoDetails = data?.data?.coin;
+    console.log(cryptoDetails);
 
     if(isFetching) return 'Loading...';
 
@@ -48,7 +49,7 @@ export default function CryptoDetails() {
         },
         {
             title: '24h Volume',
-            value: `$ ${cryptoDetails?.volume && millify(cryptoDetails?.volume)}`,
+            value: `$ ${cryptoDetails?.["24hVolume"] && millify(cryptoDetails?.["24hVolume"])}`,
             icon: <ThunderboltOutlined/>
         },
         {
@@ -75,21 +76,22 @@ export default function CryptoDetails() {
             icon: <MoneyCollectOutlined/>
         },
         {
-            title: 'Aprroved Supply',
-            value: cryptoDetails?.approvedSupply ? <CheckOutlined/> : <StopOutlined/>,
+            title: 'Approved Supply',
+            value: cryptoDetails?.approvedSupply ? <StopOutlined/> : <CheckOutlined/>,
             icon: <ExclamationCircleOutlined/>
         },
         {
             title: 'Total Supply',
-            value: `$ ${millify(cryptoDetails?.totalSupply)}`,
+            value: `$ ${millify(cryptoDetails?.supply.max)}`,
             icon: <ExclamationCircleOutlined/>
         },
         {
             title: 'Circulating Supply',
-            value: `$ ${millify(cryptoDetails?.circulatingSupply)}`,
+            value: `$ ${millify(cryptoDetails?.supply.circulating)}`,
             icon: <ExclamationCircleOutlined/>
         }
     ];
+
 
     if (isFetching) return 'Loading...';
 
@@ -160,8 +162,8 @@ export default function CryptoDetails() {
                 <Row className={'coin-desc'}>
                     <Title level={3} className={'coin-details-heading'}>
                         What is {cryptoDetails?.name}
-                        <Title level={4}>{HTMLReactParser(cryptoDetails?.description)}</Title>
                     </Title>
+                    <Title level={4}>{HTMLReactParser(cryptoDetails?.description)}</Title>
                 </Row>
                 <Col className={'coin-links'}>
                     <Title level={3} className={'coin-details-heading'}>
