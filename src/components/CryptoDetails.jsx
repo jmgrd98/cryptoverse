@@ -30,7 +30,6 @@ export default function CryptoDetails() {
     const {data, isFetching} = useGetCryptoDetailsQuery(coinId);
     const {data: coinHistory} = useGetCryptoHistoryQuery({coinId, timePeriod});
     const cryptoDetails = data?.data?.coin;
-    // const cryptoHistory = coinHistory?.data?.history;
 
     if(isFetching) return 'Loading...';
 
