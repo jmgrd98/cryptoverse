@@ -1,24 +1,22 @@
-import {Line} from 'react-chartjs-2';
-import { Chart as ChartJS } from "chart.js/auto";
-import {Col, Row, Typography} from 'antd';
+import { Line } from 'react-chartjs-2';
+import { Col, Row, Typography } from 'antd';
 
-const {Title} = Typography;
+const { Title } = Typography;
 
-const LineChart = ({coinHistory, currentPrice, coinName}) => {
+const LineChart = ({ coinHistory, currentPrice, coinName }) => {
     const coinPrice = [];
     const coinTimestamp = [];
 
-    console.log(coinHistory)
-
-    for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
-        coinPrice.push(coinHistory?.data?.history[i].price);
+    if (coinHistory?.data?.history) {
+        coinHistory.data.history.forEach(item => {
+            coinPrice.push(item.price);
+            coinTimestamp.push(new Date(item.timestamp).toLocaleDateString());
+        });
     }
 
-    for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
-        coinTimestamp.push(new Date(coinHistory?.data?.history[i].timestamp).toLocaleDateString());
-    }
     const data = {
         labels: coinTimestamp,
+
         datasets: [
             {
                 label: 'Price In USD',
@@ -31,36 +29,42 @@ const LineChart = ({coinHistory, currentPrice, coinName}) => {
     };
 
     const options = {
-        maintainAspectRatio: true,  // Ensure that the chart takes up full width/height of its container
+        maintainAspectRatio: true,
+        responsive: true,
+        legend: {
+            display: false,
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
         scales: {
             y: {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Price in USD'
-                }
+                    text: 'Price in USD',
+                },
             },
             x: {
                 title: {
                     display: true,
-                    text: 'Date'
-                }
-            }
+                    text: 'Date',
+                },
+            },
         },
     };
-
-
 
     return (
         <>
             <Row className="chart-header">
-                <Title level={2} className="chart-title">{coinName} Price Chart </Title>
+                <Title level={2} className="chart-title">{coinName} Price Chart</Title>
                 <Col className="price-container">
                     <Title level={5} className="price-change">Change: {coinHistory?.data?.change}%</Title>
                     <Title level={5} className="current-price">Current {coinName} Price: $ {currentPrice}</Title>
                 </Col>
             </Row>
-            <Line data={data} options={options}/>
+            <Line data={data} options={options} />
         </>
     );
 };
