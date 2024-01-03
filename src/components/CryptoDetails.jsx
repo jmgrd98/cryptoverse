@@ -15,7 +15,8 @@ import {
     MessageOutlined
 } from "@ant-design/icons";
 import {useEffect, useState} from "react";
-import {LineChart} from "./index.jsx";
+// import {LineChart} from "./index.jsx";
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import {useGetCryptoDetailsQuery, useGetCryptoHistoryQuery} from "../services/cryptoApi";
 
 const {Title, Text} = Typography;
@@ -119,7 +120,19 @@ export default function CryptoDetails() {
             >
                 {time.map((date) => <Option key={crypto.randomUUID()}>{date}</Option>)}
             </Select>
-             <LineChart key={crypto.randomUUID()} coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name}/>
+
+
+             {/*<LineChart key={crypto.randomUUID()} coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name}/>*/}
+            <LineChart width={550} height={275} data={coinHistory} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="Consumo" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="Energia Compensada" stroke="#82ca9d" />
+            </LineChart>
+
             <Col className={'stats-container'}>
                 <Col className={'coin-value-statistics'}>
                     <Col className={'coin-value-statistics-heading'}>
