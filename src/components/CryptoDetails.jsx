@@ -44,6 +44,10 @@ export default function CryptoDetails() {
 
     const time = ['3h', '24h', '7d', '30d', '1y', '5y'];
 
+    const handleTimePeriodChange = (value) => {
+        setTimePeriod(value);
+    };
+
     const stats = [
         {
             title: 'Price to USD',
@@ -119,9 +123,13 @@ export default function CryptoDetails() {
                 defaultValue={'7d'}
                 className={'select-timeperiod'}
                 placeholder={'Select Time Period'}
-                onChange={(value) => setTimePeriod(value)}
+                onChange={handleTimePeriodChange}
             >
-                {time.map((date) => <Option key={crypto.randomUUID()}>{date}</Option>)}
+                {time.map((date) => (
+                    <Option key={crypto.randomUUID()} value={date}>
+                        {date}
+                    </Option>
+                ))}
             </Select>
 
             <LineChart
@@ -132,7 +140,7 @@ export default function CryptoDetails() {
                 >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
-                <YAxis dataKey="price"/>
+                <YAxis dataKey="Price"/>
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="Time" stroke="#8884d8" activeDot={{ r: 8 }} />
