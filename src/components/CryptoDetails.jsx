@@ -15,7 +15,6 @@ import {
     MessageOutlined
 } from "@ant-design/icons";
 import {useEffect, useState} from "react";
-// import {LineChart} from "./index.jsx";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import {useGetCryptoDetailsQuery, useGetCryptoHistoryQuery} from "../services/cryptoApi";
 
@@ -31,11 +30,15 @@ export default function CryptoDetails() {
     const {data, isFetching} = useGetCryptoDetailsQuery(coinId);
     const  coinHistoryData = useGetCryptoHistoryQuery({coinId, timePeriod});
     const cryptoDetails = data?.data?.coin;
-    const coinHistory = {
-        coinId: coinHistoryData?.originalArgs?.coinId,
-        timePeriod: coinHistoryData?.originalArgs?.timePeriod,
-    }
-    console.log(coinHistoryData);
+    const coinHistory = coinHistoryData?.data?.data?.history?.map(item => ({
+        date: new Date(item.timestamp).toLocaleDateString(),
+        Time: new Date(item.timestamp).toLocaleTimeString(),
+        Price: item.price,
+      }));
+    useEffect(() => {
+        console.log('COIN HISTORY DATA', coinHistoryData)
+        console.log('COIN HISTORY', coinHistory)
+    }, [])
 
     if(isFetching) return 'Loading...';
 
@@ -121,17 +124,21 @@ export default function CryptoDetails() {
                 {time.map((date) => <Option key={crypto.randomUUID()}>{date}</Option>)}
             </Select>
 
-
-             {/*<LineChart key={crypto.randomUUID()} coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name}/>*/}
-            <LineChart width={550} height={275} data={coinHistory} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <LineChart
+                width={550}
+                height={275}
+                data={coinHistory}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
-                <YAxis />
+                <YAxis dataKey="price"/>
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="Consumo" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="Energia Compensada" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="Time" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="Price" stroke="#82ca9d" />
             </LineChart>
+
 
             <Col className={'stats-container'}>
                 <Col className={'coin-value-statistics'}>
